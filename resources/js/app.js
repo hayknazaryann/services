@@ -1,7 +1,7 @@
 import './bootstrap';
 
 import { createApp } from 'vue'
-import App from './views/layouts/App.vue'
+import App from './views/client/layouts/App.vue'
 
 // Router
 import router  from './router'
