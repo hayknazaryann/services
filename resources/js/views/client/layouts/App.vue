@@ -2,11 +2,24 @@
     <v-layout>
         <v-theme-provider theme="customDarkTheme">
             <v-app id="inspire">
-                <v-app-bar :elevation="7" title="Application" fixed>
+                <v-app-bar :elevation="4" title="Application" fixed>
                     <template v-slot:append>
-                        <v-btn :to="`/`" icon="mdi-home" title="Home"></v-btn>
-                        <v-btn :to="`/login`" icon="mdi-login-variant" title="Login"></v-btn>
-                        <v-btn :to="`/register`" icon="mdi-account-plus" title="Register"></v-btn>
+                        <v-btn :to="{ name: 'home' }" icon="mdi-home" title="Home"></v-btn>
+                        <v-btn
+                            :to="{ name: (isAuthenticated ? 'profile' : 'login') }"
+                            :icon="isAuthenticated ? 'mdi-account' : 'mdi-login-variant'"
+                            :title="isAuthenticated ? 'Profile' : 'Login'"
+                        ></v-btn>
+                        <v-btn v-if="isAuthenticated"
+                            @click="logout"
+                            icon="mdi-logout"
+                            title="Logout"
+                        ></v-btn>
+                        <v-btn v-else
+                            :to="{ name: 'register'}"
+                            icon="mdi-account-plus"
+                            title="Register"
+                        ></v-btn>
                         <v-btn
                             :icon="darkMode ? 'mdi-white-balance-sunny' : 'mdi-weather-night'"
                             @click="switchTheme"
@@ -66,7 +79,8 @@ export default {
     }),
     computed: {
         ...mapGetters({
-            'isDark': 'settings/darkMode'
+            'isDark': 'settings/darkMode',
+            'isAuthenticated': 'auth/isAuthenticated'
         }),
         darkMode: function () {
             return this.isDark;
@@ -80,11 +94,21 @@ export default {
     },
     methods: {
         ...mapActions({
-            changeTheme: 'settings/changeTheme'
+            changeTheme: 'settings/changeTheme',
+            appLogout: 'auth/logout'
         }),
         switchTheme() {
             this.changeTheme();
             this.$vuetify.theme.name = this.theme
+        },
+        async logout(){
+            try {
+                await this.appLogout(this.user).then((response) => {
+                    this.$router.replace({ path: '/login'});
+                });
+            } catch (e) {
+
+            }
         },
     }
 }

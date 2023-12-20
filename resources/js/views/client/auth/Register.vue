@@ -5,7 +5,7 @@
                 cols="12"
                 md="6"
             >
-                <v-card class="p-4 rounded-lg" :elevation="7">
+                <v-card class="p-4 rounded-lg" :elevation="4">
                     <v-card-title>Register</v-card-title>
                     <v-card-text>
                         <v-form
@@ -14,33 +14,28 @@
                             @submit.prevent
                         >
                             <v-text-field
-                                v-model="auth.firstName"
-                                label="First Name"
-                                :rules="rules.firstName"
+                                v-model="user.name"
+                                label="Full Name"
+                                :rules="rules.name"
                                 required
                             ></v-text-field>
                             <v-text-field
-                                v-model="auth.lastName"
-                                label="Last Name"
-                                :rules="rules.lastName"
-                            ></v-text-field>
-                            <v-text-field
-                                v-model="auth.email"
+                                v-model="user.email"
                                 label="E-mail"
                                 :rules="rules.email"
                             ></v-text-field>
 
                             <v-text-field
-                                v-model="auth.password"
+                                v-model="user.password"
                                 type="password"
                                 label="Password"
                                 :rules="rules.password"
                             ></v-text-field>
                             <v-text-field
-                                v-model="auth.confirmPassword"
+                                v-model="user.password_confirmation"
                                 type="password"
                                 label="Password confirm"
-                                :rules="rules.confirmPassword"
+                                :rules="rules.password_confirmation"
                             ></v-text-field>
 
                             <v-btn
@@ -58,20 +53,21 @@
     </v-container>
 </template>
 <script>
+import {mapActions} from "vuex";
+
 export default {
     name:'register',
     data(){
         return {
-            auth:{
-                firstName:'',
-                lastName:'',
+            user:{
+                name:'',
                 email:'',
                 password:'',
-                confirmPassword:'',
+                password_confirmation:'',
             },
             errors: null,
             rules: {
-                firstName: [
+                name: [
                     v => !!v || 'First Name is required',
                     v => (v && v.length >= 2) || 'First Name must be more than 2 characters',
                 ],
@@ -87,18 +83,36 @@ export default {
                     v => !!v || 'Password is required',
                     v => (v && v.length >= 8) || 'Password must be at least 8 characters',
                 ],
-                confirmPassword: [
+                password_confirmation: [
                     v => !!v || 'Confirm Password is required',
-                    v => (this.auth.password === v) || 'Password must match'
+                    v => (this.user.password === v) || 'Password must match'
                 ],
             }
         }
     },
     methods:{
+        ...mapActions({
+            appRegister: 'auth/register'
+        }),
         async register(){
             const {valid} = await this.$refs.registerForm.validate()
             if (valid) {
+                this.loading = true;
+                this.errors = null;
+                try {
+                    await this.appRegister(this.user).then((response) => {
+                        this.loading = false;
+                        this.$router.replace({ path: '/profile'});
+                    });
+                } catch (e) {
+                    if (e.status === 422) {
+                        this.errors = e.data.errors;
 
+                    } else if (e.status === 401) {
+
+                    }
+                    this.loading = false;
+                }
             }
         },
     }

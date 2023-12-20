@@ -5,7 +5,7 @@
                 cols="12"
                 md="6"
             >
-                <v-card class="p-3 rounded-lg" :elevation="7">
+                <v-card class="p-3 rounded-lg" :elevation="4">
                     <v-card-title>Login</v-card-title>
                     <v-card-text>
                         <v-form
@@ -15,13 +15,13 @@
                         >
 
                             <v-text-field
-                                v-model="auth.email"
+                                v-model="user.email"
                                 :rules="rules.email"
                                 label="E-mail"
                             ></v-text-field>
 
                             <v-text-field
-                                v-model="auth.password"
+                                v-model="user.password"
                                 :rules="rules.password"
                                 type="password"
                                 label="Password"
@@ -44,12 +44,13 @@
 
 <script>
 import {mapActions} from "vuex";
+import router from "../../../router/index.js";
 
 export default {
     name:'login',
     data(){
         return {
-            auth:{
+            user: {
                 email:'',
                 password:'',
             },
@@ -67,13 +68,30 @@ export default {
         }
     },
     methods:{
+        ...mapActions({
+            appLogin:'auth/login'
+        }),
         async login(){
-            console.log(this.$refs);
             const {valid} = await this.$refs.loginForm.validate()
             if (valid) {
+                this.loading = true;
+                this.errors = null;
+                try {
+                    await this.appLogin(this.user).then((response) => {
+                        this.$router.replace({ path: '/'});
+                    });
+                } catch (e) {
+                    if (e.status === 422) {
+                        this.errors = e.data.errors;
 
+                    } else if (e.status === 401) {
+
+                    }
+                    this.loading = false;
+                }
             }
         },
+
     }
 }
 </script>
