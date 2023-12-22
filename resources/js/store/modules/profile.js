@@ -1,5 +1,10 @@
 import axios from 'axios';
+import router from "../../router/index.js";
 import Cookies from "js-cookie";
+
+import {useToast} from "vue-toastification";
+const toast = useToast();
+
 export default {
     namespaced: true,
     state:{
@@ -35,8 +40,8 @@ export default {
                 const response = await axios.post('/api/client/login', userData);
                 dispatch('setUser');
                 commit('SET_TOKEN', response.data.data.token);
-            } catch (error) {
-                console.error(error);
+            } catch (e) {
+                throw e;
             }
         },
 
@@ -44,8 +49,10 @@ export default {
             try {
                 await axios.get('/sanctum/csrf-cookie')
                 const response = await axios.post('/api/client/register', userData);
-            } catch (error) {
-                console.error(error);
+                toast.success(response.data.message);
+                router.push({ path: '/login'});
+            } catch (e) {
+                throw e;
             }
         },
 
@@ -54,8 +61,9 @@ export default {
                 const response = await axios.get('/api/user');
                 commit('SET_USER', response.data.data);
                 commit('SET_AUTHENTICATED', true);
-            } catch (error) {
-                console.error(error);
+                router.push({ path: '/profile'});
+            } catch (e) {
+                throw e;
             }
         },
 
@@ -66,8 +74,9 @@ export default {
                 commit('SET_USER', {})
                 commit('SET_AUTHENTICATED', false)
                 commit('SET_TOKEN', null)
-            } catch (error) {
-                console.error(error);
+                router.push({ path: '/login'});
+            } catch (e) {
+                throw e;
             }
         },
 
@@ -76,8 +85,9 @@ export default {
                 await axios.get('/sanctum/csrf-cookie')
                 const response = await axios.post('/api/client/profile/update', userData);
                 commit('SET_USER', userData);
-            } catch (error) {
-                console.error(error);
+                toast.success(response.data.message);
+            } catch (e) {
+                throw e;
             }
         },
 
@@ -85,8 +95,9 @@ export default {
             try {
                 await axios.get('/sanctum/csrf-cookie')
                 const response = await axios.post('/api/client/password/change', data);
-            } catch (error) {
-                console.error(error);
+                toast.success(response.data.message);
+            } catch (e) {
+                throw e;
             }
         }
     }

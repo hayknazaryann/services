@@ -1,17 +1,37 @@
 import 'bootstrap';
-
-/**
- * We'll load the axios HTTP library which allows us to easily issue requests
- * to our Laravel back-end. This library automatically handles sending the
- * CSRF token as a header based on the value of the "XSRF" token cookie.
- */
-
 import axios from 'axios';
+import { useToast } from "vue-toastification";
 window.axios = axios;
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-window.axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+// window.axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 window.axios.defaults.withCredentials = true;
+
+
+window.axios.interceptors.response.use(
+    response => {
+        if (response.status === 200 || response.status === 201 || response.status === 204) {
+            return Promise.resolve(response);
+        } else {
+            return Promise.reject(response);
+        }
+    },
+    error => {
+        const status = error.response ? error.response.status : null;
+        const toast = useToast();
+        if (status === 400) {
+            toast.error(error.response.data.message);
+        } else if (status === 401) {
+            toast.error(error.response.data.message);
+        } else if (status === 404) {
+            toast.error(error.response.data.message);
+        } else if (status === 419) {
+            toast.error(error.response.data.message);
+        }
+
+        return Promise.reject(error);
+    }
+);
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening

@@ -6,50 +6,69 @@
                 md="6"
             >
                 <v-card class="p-4 rounded-lg" :elevation="4">
-                    <v-card-title>Register</v-card-title>
+                    <v-card-title class="text-center">Register</v-card-title>
+                    <v-divider></v-divider>
                     <v-card-text>
                         <v-form
-                            class="d-flex flex-column ga-2"
                             ref="registerForm"
-                            @submit.prevent
+                            @submit.prevent="register"
                         >
-                            <v-text-field
-                                v-model="user.first_name"
-                                label="First Name"
-                                :rules="rules.first_name"
-                                required
-                            ></v-text-field>
-                            <v-text-field
-                                v-model="user.last_name"
-                                label="Last Name"
-                                :rules="rules.last_name"
-                                required
-                            ></v-text-field>
-                            <v-text-field
-                                v-model="user.email"
-                                label="E-mail"
-                                :rules="rules.email"
-                            ></v-text-field>
-                            <v-text-field
-                                v-model="user.password"
-                                type="password"
-                                label="Password"
-                                :rules="rules.password"
-                            ></v-text-field>
-                            <v-text-field
-                                v-model="user.password_confirmation"
-                                type="password"
-                                label="Password confirm"
-                                :rules="rules.password_confirmation"
-                            ></v-text-field>
-
-                            <v-btn
-                                color="success"
-                                class="mt-2"
-                                @click="register"
-                            >
-                                Register
-                            </v-btn>
+                            <v-row>
+                                <v-col cols="12" md="12">
+                                    <v-text-field
+                                        v-model="user.first_name"
+                                        label="First Name"
+                                        :rules="rules.first_name"
+                                        :error-messages="errors && errors.first_name ? errors.first_name[0] : ''"
+                                        required
+                                    ></v-text-field>
+                                </v-col>
+                                <v-col cols="12" md="12">
+                                    <v-text-field
+                                        v-model="user.last_name"
+                                        label="Last Name"
+                                        :rules="rules.last_name"
+                                        :error-messages="errors && errors.last_name ? errors.last_name[0] : ''"
+                                        required
+                                    ></v-text-field>
+                                </v-col>
+                                <v-col cols="12" md="12">
+                                    <v-text-field
+                                        v-model="user.email"
+                                        label="E-mail"
+                                        :rules="rules.email"
+                                        :error-messages="errors && errors.email ? errors.email[0] : ''"
+                                    ></v-text-field>
+                                </v-col>
+                                <v-col cols="12" md="12">
+                                    <v-text-field
+                                        v-model="user.password"
+                                        type="password"
+                                        label="Password"
+                                        :rules="rules.password"
+                                        :error-messages="errors && errors.password ? errors.password[0] : ''"
+                                    ></v-text-field>
+                                </v-col>
+                                <v-col cols="12" md="12">
+                                    <v-text-field
+                                        v-model="user.password_confirmation"
+                                        type="password"
+                                        label="Password confirm"
+                                        :rules="rules.password_confirmation"
+                                        :error-messages="errors && errors.password_confirmation ? errors.password_confirmation[0] : ''"
+                                    ></v-text-field>
+                                </v-col>
+                                <v-col cols="12" md="12" class="text-center">
+                                    <v-btn
+                                        type="submit"
+                                        color="success"
+                                        class="mt-2"
+                                        :loading="loading"
+                                    >
+                                        Register
+                                    </v-btn>
+                                </v-col>
+                            </v-row>
                         </v-form>
                     </v-card-text>
                 </v-card>
@@ -71,6 +90,7 @@ export default {
                 password:'',
                 password_confirmation:'',
             },
+            loading: false,
             errors: null,
             rules: {
                 first_name: [
@@ -108,14 +128,10 @@ export default {
                 try {
                     await this.appRegister(this.user).then((response) => {
                         this.loading = false;
-                        this.$router.replace({ path: '/login'});
                     });
                 } catch (e) {
-                    if (e.status === 422) {
-                        this.errors = e.data.errors;
-
-                    } else if (e.status === 401) {
-
+                    if (e.response && e.response.status === 422) {
+                        this.errors = e.response.data.errors;
                     }
                     this.loading = false;
                 }

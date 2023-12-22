@@ -104,9 +104,8 @@ export default {
         },
         async logout(){
             try {
-                await this.appLogout(this.user).then((response) => {
-                    this.$router.replace({ path: '/login'});
-                });
+                await this.appLogout(this.user)
+                    .then((response) => {});
             } catch (e) {
 
             }

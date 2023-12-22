@@ -1,6 +1,7 @@
 <template>
     <v-card flat>
         <v-card-title class="headline">Profile Info</v-card-title>
+        <v-divider></v-divider>
         <v-card-text>
             <v-row>
                 <v-col cols="12" md="12">
@@ -8,22 +9,29 @@
                         {{user.first_name + ' ' + user.last_name}}
                     </p>
                 </v-col>
-                <v-col cols="12" md="12">
+                <v-col cols="12" md="12" v-if="user.specialization">
                     <p class="text-subtitle-1">
                         {{user.specialization}}
                     </p>
                 </v-col>
-                <v-col cols="12" md="12">
+                <v-col cols="12" md="12" v-if="user.about">
                     <p class="text-body-2 font-weight-light">
                         {{user.about}}
                     </p>
                 </v-col>
                 <v-col cols="12" md="12">
                     <v-chip-group>
-                        <v-chip prepend-icon="mdi-phone">
+                        <v-chip
+                            prepend-icon="mdi-phone"
+                            v-if="user.phone_code && user.phone_number"
+                            :href="`tel:${user.phone_code + user.phone_number}`"
+                        >
                             {{user.phone_code + user.phone_number}}
                         </v-chip>
-                        <v-chip prepend-icon="mdi-email">
+                        <v-chip
+                            prepend-icon="mdi-email"
+                            :href="`mailto:${user.email}`"
+                        >
                             {{user.email}}
                         </v-chip>
                     </v-chip-group>

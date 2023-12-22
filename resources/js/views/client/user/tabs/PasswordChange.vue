@@ -1,6 +1,7 @@
 <template>
     <v-card flat>
         <v-card-title class="headline">Change Password</v-card-title>
+        <v-divider></v-divider>
         <v-card-text>
             <v-form @submit.prevent="changePassword" ref="passwordForm">
                 <v-row>
@@ -32,7 +33,11 @@
                         ></v-text-field>
                     </v-col>
                     <v-col cols="12">
-                        <v-btn type="submit" color="primary">Change</v-btn>
+                        <v-btn
+                            type="submit"
+                            color="primary"
+                            :loading="loading"
+                        >Change</v-btn>
                     </v-col>
                 </v-row>
             </v-form>
@@ -46,6 +51,7 @@ export default {
     props: ['user'],
     data() {
         return {
+            loading: false,
             password: {
                 current: '',
                 new: '',

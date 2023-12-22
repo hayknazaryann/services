@@ -11,6 +11,7 @@ const routes = [
         path: '/',
         name: 'home',
         meta:{
+            middleware: 'guest',
             title: 'Home',
         },
         component: Index
@@ -52,20 +53,24 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
+    // Set document title based on route meta information
     document.title = `${to.meta.title}`;
-    if (to.meta.middleware === 'guest') {
-        if (store.state.profile.isAuthenticated) {
-            next({ name: 'profile' });
-        } else {
-            next();
-        }
+
+    // Retrieve authentication status from Vuex store
+    const isAuthenticated = store.state.profile.isAuthenticated;
+
+    // Check if the route is marked as a guest route
+    const isGuestRoute = to.meta.middleware === 'guest';
+
+    // Check middleware and authentication status for route access
+    if (isGuestRoute) {
+        // Allow guest routes without authentication check
+        next();
     } else {
-        if (store.state.profile.isAuthenticated) {
-            next();
-        } else {
-            next({ name: 'login' });
-        }
+        // For non-guest routes, check authentication status
+        isAuthenticated ? next() : next({ name: 'login' });
     }
 });
+
 
 export default router

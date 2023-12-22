@@ -16,5 +16,22 @@ app.use(vuetify);
 import store  from './store'
 app.use(store);
 
+// Vue toast
+import Toast from "vue-toastification";
+import "vue-toastification/dist/index.css";
+app.use(Toast, {
+    position: "bottom-left",
+    timeout: 5000,
+    closeOnClick: false,
+    pauseOnFocusLoss: true,
+    pauseOnHover: false,
+    draggable: true,
+    draggablePercent: 0.6,
+    showCloseButtonOnHover: true,
+    hideProgressBar: false,
+    icon: true,
+    rtl: false
+});
+
 
 app.mount('#app');

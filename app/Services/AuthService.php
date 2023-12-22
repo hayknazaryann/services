@@ -32,13 +32,13 @@ class AuthService
     {
         try {
             if(!Auth::attempt($data)) {
-                return $this->errorResponse('Unauthorized', 401);
+                return $this->errorResponse('Unauthorized: Invalid credentials', 401);
             }
 
             $responseData['user'] = new UserResource(request()->user());
             $responseData['token'] = $responseData['user']->createToken('authToken')->plainTextToken;
 
-            return $this->successResponse($responseData, __('Successfully registered'), 200);
+            return $this->successResponse($responseData, __('Successfully logged in'), 200);
         } catch (\Exception $exception) {
             return $this->errorResponse(__('Unauthorized'), 400);
         }
