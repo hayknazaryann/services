@@ -5,6 +5,7 @@
                 <v-app-bar :elevation="4" title="Application" fixed>
                     <template v-slot:append>
                         <v-btn :to="{ name: 'home' }" icon="mdi-home" title="Home"></v-btn>
+                        <v-btn v-if="isAuthenticated" icon="mdi-note-plus" title="Notes"></v-btn>
                         <v-btn
                             :to="{ name: (isAuthenticated ? 'profile' : 'login') }"
                             :icon="isAuthenticated ? 'mdi-account' : 'mdi-login-variant'"
@@ -80,7 +81,7 @@ export default {
     computed: {
         ...mapGetters({
             'isDark': 'settings/darkMode',
-            'isAuthenticated': 'auth/isAuthenticated'
+            'isAuthenticated': 'profile/isAuthenticated'
         }),
         darkMode: function () {
             return this.isDark;
@@ -95,7 +96,7 @@ export default {
     methods: {
         ...mapActions({
             changeTheme: 'settings/changeTheme',
-            appLogout: 'auth/logout'
+            appLogout: 'profile/logout'
         }),
         switchTheme() {
             this.changeTheme();

@@ -69,7 +69,7 @@ export default {
     },
     methods:{
         ...mapActions({
-            appLogin:'auth/login'
+            appLogin:'profile/login'
         }),
         async login(){
             const {valid} = await this.$refs.loginForm.validate()
@@ -78,7 +78,7 @@ export default {
                 this.errors = null;
                 try {
                     await this.appLogin(this.user).then((response) => {
-                        this.$router.replace({ path: '/'});
+                        this.$router.replace({ path: '/profile'});
                     });
                 } catch (e) {
                     if (e.status === 422) {

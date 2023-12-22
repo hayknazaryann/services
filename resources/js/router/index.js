@@ -11,7 +11,6 @@ const routes = [
         path: '/',
         name: 'home',
         meta:{
-            middleware: 'guest',
             title: 'Home',
         },
         component: Index
@@ -55,13 +54,13 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
     document.title = `${to.meta.title}`;
     if (to.meta.middleware === 'guest') {
-        if (store.state.auth.isAuthenticated) {
+        if (store.state.profile.isAuthenticated) {
             next({ name: 'profile' });
         } else {
             next();
         }
     } else {
-        if (store.state.auth.isAuthenticated) {
+        if (store.state.profile.isAuthenticated) {
             next();
         } else {
             next({ name: 'login' });

@@ -2,8 +2,9 @@
 
 namespace App\Services;
 
+use App\Http\Resources\User\UserResource;
 use App\Models\User;
-use App\Repositories\UserRepository;
+use App\Repositories\Interfaces\UserInterface as UserRepository;
 use App\Traits\ApiControllerTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
@@ -34,14 +35,14 @@ class AuthService
                 return $this->errorResponse('Unauthorized', 401);
             }
 
-            $responseData['user'] = request()->user();
+            $responseData['user'] = new UserResource(request()->user());
             $responseData['token'] = $responseData['user']->createToken('authToken')->plainTextToken;
+
             return $this->successResponse($responseData, __('Successfully registered'), 200);
         } catch (\Exception $exception) {
             return $this->errorResponse(__('Unauthorized'), 400);
         }
     }
-
 
     /**
      * @param array $data
@@ -51,9 +52,9 @@ class AuthService
     {
         try {
             $data['password'] = Hash::make($data['password']);
-            $responseData['user'] = $this->userRepository->create($data);
-            $responseData['token'] = $this->userRepository->createToken($responseData['user'], 'authToken');
-            return $this->successResponse($responseData, __('Successfully registered'), 201);
+            $this->userRepository->create($data);
+
+            return $this->successResponse([], __('Successfully registered'), 201);
         } catch (\Exception $exception) {
             return $this->errorResponse(__('Unauthorized'), 400);
         }
@@ -68,12 +69,10 @@ class AuthService
             request()->user()->tokens()->delete();
             request()->session()->invalidate();
             request()->session()->regenerateToken();
+
             return $this->successResponse([], __('Successfully logged out'), 200);
         } catch (\Exception $exception) {
             return $this->errorResponse(__('Unauthorized'), 400);
         }
-
-
     }
-
 }

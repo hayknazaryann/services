@@ -14,9 +14,15 @@
                             @submit.prevent
                         >
                             <v-text-field
-                                v-model="user.name"
-                                label="Full Name"
-                                :rules="rules.name"
+                                v-model="user.first_name"
+                                label="First Name"
+                                :rules="rules.first_name"
+                                required
+                            ></v-text-field>
+                            <v-text-field
+                                v-model="user.last_name"
+                                label="Last Name"
+                                :rules="rules.last_name"
                                 required
                             ></v-text-field>
                             <v-text-field
@@ -24,7 +30,6 @@
                                 label="E-mail"
                                 :rules="rules.email"
                             ></v-text-field>
-
                             <v-text-field
                                 v-model="user.password"
                                 type="password"
@@ -60,18 +65,19 @@ export default {
     data(){
         return {
             user:{
-                name:'',
+                first_name:'',
+                last_name:'',
                 email:'',
                 password:'',
                 password_confirmation:'',
             },
             errors: null,
             rules: {
-                name: [
+                first_name: [
                     v => !!v || 'First Name is required',
                     v => (v && v.length >= 2) || 'First Name must be more than 2 characters',
                 ],
-                lastName: [
+                last_name: [
                     v => !!v || 'Last Name is required',
                     v => (v && v.length >= 2) || 'Last Name must be more than 2 characters',
                 ],
@@ -92,7 +98,7 @@ export default {
     },
     methods:{
         ...mapActions({
-            appRegister: 'auth/register'
+            appRegister: 'profile/register'
         }),
         async register(){
             const {valid} = await this.$refs.registerForm.validate()
@@ -102,7 +108,7 @@ export default {
                 try {
                     await this.appRegister(this.user).then((response) => {
                         this.loading = false;
-                        this.$router.replace({ path: '/profile'});
+                        this.$router.replace({ path: '/login'});
                     });
                 } catch (e) {
                     if (e.status === 422) {

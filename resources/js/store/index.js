@@ -1,7 +1,7 @@
 import { createStore } from 'vuex'
 import createPersistedState from 'vuex-persistedstate'
 import settings from './modules/settings.js'
-import auth from './modules/auth.js'
+import profile from './modules/profile.js'
 
 export default new createStore({
     plugins: [
@@ -9,6 +9,6 @@ export default new createStore({
     ],
     modules: {
         settings,
-        auth
+        profile
     },
 })
