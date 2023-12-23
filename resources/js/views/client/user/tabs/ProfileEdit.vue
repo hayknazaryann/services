@@ -29,25 +29,13 @@
                             </v-col>
                             <v-col cols="12">
                                 <v-row>
-                                    <v-col cols="12" md="4">
-                                        <v-select
-                                            label="Code"
-                                            v-model="user.phone_code"
-                                            :items="countryCodes"
-                                            :error-messages="errors && errors.phone_code ? errors.phone_code[0] : ''"
-                                            clearable
-                                            outlined
-                                        ></v-select>
+                                    <v-col cols="12" md="12">
+                                        <v-phone-input
+                                            v-model="user.phone"
+                                            :aria-errormessage="'asdads'"
+                                        ></v-phone-input>
                                     </v-col>
-                                    <v-col cols="12" md="8">
-                                        <v-text-field
-                                            label="Phone"
-                                            v-model="user.phone_number"
-                                            :error-messages="errors && errors.phone_number ? errors.phone_number[0] : ''"
-                                            clearable
-                                            outlined
-                                        ></v-text-field>
-                                    </v-col>
+
                                 </v-row>
                             </v-col>
                             <v-col cols="12">
@@ -68,7 +56,7 @@
                                     outlined
                                 ></v-text-field>
                             </v-col>
-                            <v-col cols12>
+                            <v-col cols="12">
                                 <v-textarea
                                     label="About"
                                     v-model="user.about"
@@ -83,6 +71,7 @@
                             title="Birth Date"
                             v-model="user.birthdate"
                             :error-messages="errors && errors.birthdate ? errors.birthdate[0] : ''"
+                            :format="birthDateFormat"
                             elevation="4"
                             show-adjacent-months
                         ></v-date-picker>
@@ -103,13 +92,15 @@
 </template>
 <script>
 import {mapActions} from "vuex";
+import {VPhoneInput} from "v-phone-input";
 export default {
+    components: {VPhoneInput},
     props: ['user'],
     data() {
         return {
             loading: false,
             errors: null,
-            countryCodes: ['+374', '+7'],
+            birthDateFormat: 'YYYY-MM-DD',
             rules: {
                 first_name: [
                     v => !!v || 'First Name is required',
@@ -134,7 +125,6 @@ export default {
                 try {
                     await this.profileUpdate(this.user).then((response) => {
                         this.loading = false;
-                        console.log(response);
                     });
                 } catch (e) {
                     if (e.response && e.response.status === 422) {

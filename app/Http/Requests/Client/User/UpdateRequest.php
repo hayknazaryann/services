@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Client\User;
 
+use App\Rules\PhoneNumberRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateRequest extends FormRequest
 {
@@ -22,15 +24,14 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'first_name' => 'required|alpha',
-            'last_name' => 'required|alpha',
-            'phone_code' => 'nullable',
-            'phone_number' => 'nullable',
-            'address' => 'nullable|string',
-            'specialization' => 'nullable|string',
+            'first_name' => 'required|alpha|min:2|max:255',
+            'last_name' => 'required|alpha|min:2|max:255',
+            'phone' => ['nullable', 'unique:user_profiles,phone,' . $this->request->get('id'), new PhoneNumberRule()],
+            'address' => 'nullable|string|min:2|max:255',
+            'specialization' => 'nullable|string|min:2|max:255',
             'about' => 'nullable|string',
             'avatar' => 'nullable',
-            'birthdate' => 'nullable',
+            'birthdate' => 'nullable|date',
         ];
     }
 }

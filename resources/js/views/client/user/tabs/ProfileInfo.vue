@@ -3,7 +3,7 @@
         <v-card-title class="headline">Profile Info</v-card-title>
         <v-divider></v-divider>
         <v-card-text>
-            <v-row>
+            <v-row v-if="user">
                 <v-col cols="12" md="12">
                     <p class="text-h5">
                         {{user.first_name + ' ' + user.last_name}}
@@ -23,10 +23,10 @@
                     <v-chip-group>
                         <v-chip
                             prepend-icon="mdi-phone"
-                            v-if="user.phone_code && user.phone_number"
-                            :href="`tel:${user.phone_code + user.phone_number}`"
+                            v-if="user.phone"
+                            :href="`tel:${user.phone}`"
                         >
-                            {{user.phone_code + user.phone_number}}
+                            {{user.phone}}
                         </v-chip>
                         <v-chip
                             prepend-icon="mdi-email"

@@ -24,6 +24,7 @@ export default function setup() {
             } else if (status === 404) {
                 toast.error(error.response.data.message);
             } else if (status === 419) {
+                window.location.reload();
                 toast.error(error.response.data.message);
             }
 

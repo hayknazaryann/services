@@ -20,13 +20,11 @@ class UserResource extends JsonResource
             'first_name' => $this->first_name,
             'last_name' => $this->last_name,
             'email' => $this->email,
-            'phone_code' => $this->profile->phone_code ?? null,
-            'phone_number' => $this->profile->phone_number ?? null,
+            'phone' => $this->profile->phone ?? null,
             'address' => $this->profile->address ?? null,
             'specialization' => $this->profile->specialization ?? null,
             'about' => $this->profile->about ?? null,
             'avatar' => $this->profile->avatar ?? null,
-//            'birthdate' => $this->profile->birthdate ?? null,
             'birthdate' => $this->profile->birthdate ? Carbon::parse($this->profile->birthdate)->format('F j, Y') : null,
         ];
     }

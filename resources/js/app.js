@@ -1,15 +1,15 @@
 import './bootstrap';
 
-import { createApp } from 'vue'
+import { createApp } from 'vue';
 import App from './views/client/layouts/App.vue'
 const app = createApp(App);
 
 // Routes
-import router  from './router'
+import router  from './router';
 app.use(router);
 
 // Vuetify
-import vuetify  from './plugins/vuetify.js'
+import vuetify  from './plugins/vuetify.js';
 app.use(vuetify);
 
 // Store
@@ -19,10 +19,6 @@ app.use(store);
 // Vue toast
 import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
-
-import interceptorsSetup from './helpers/interceptors'
-interceptorsSetup();
-
 app.use(Toast, {
     position: "bottom-left",
     timeout: 5000,
@@ -37,5 +33,12 @@ app.use(Toast, {
     rtl: false
 });
 
+// Interceptor
+import interceptorsSetup from './helpers/interceptors'
+interceptorsSetup();
+
+// Phone Input
+import vPhoneInput from "./plugins/vPhoneInput.js";
+app.use(vPhoneInput);
 
 app.mount('#app');
