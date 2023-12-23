@@ -3,13 +3,11 @@
 namespace App\Services;
 
 use App\Http\Resources\User\UserResource;
-use App\Models\User;
 use App\Repositories\Interfaces\UserInterface as UserRepository;
 use App\Traits\ApiControllerTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Response;
 
 class AuthService
 {

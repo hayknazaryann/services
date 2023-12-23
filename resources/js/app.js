@@ -19,6 +19,10 @@ app.use(store);
 // Vue toast
 import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
+
+import interceptorsSetup from './helpers/interceptors'
+interceptorsSetup();
+
 app.use(Toast, {
     position: "bottom-left",
     timeout: 5000,

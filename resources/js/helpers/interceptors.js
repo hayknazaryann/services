@@ -1,9 +1,8 @@
-import axios from 'axios';
-import router  from '../router'
-import store  from '../store'
-
+import {useToast} from "vue-toastification";
+import store from '../store';
+import router from "../router";
 export default function setup() {
-    axios.interceptors.response.use(
+    window.axios.interceptors.response.use(
         response => {
             if (response.status === 200 || response.status === 201 || response.status === 204) {
                 return Promise.resolve(response);
@@ -11,46 +10,24 @@ export default function setup() {
                 return Promise.reject(response);
             }
         },
-        (error) => {
-            switch (error.response.status) {
-                case 400:
-                case 500:
-
-                    break;
-                case 401:
-                    store.dispatch('auth/logout')
-                    setTimeout(() => {
-                        router.replace({
-                            path: "/login",
-                            query: { redirect: router.currentRoute.fullPath }
-                        });
-                    }, 1000);
-                    break;
-                case 403:
-                    // store.commit('auth/resetState')
-                    setTimeout(() => {
-                        router.replace({
-                            path: "/login",
-                            query: { redirect: router.currentRoute.fullPath }
-                        });
-                    }, 1000);
-                    break;
-                case 404:
-                    router.replace({
-                        path: "/",
-                    });
-
-                    break;
-                case 502:
-                    // store.commit('auth/resetState')
-                    setTimeout(() => {
-                        router.replace({
-                            path: "/login",
-                            query: { redirect: router.currentRoute.fullPath }
-                        });
-                    }, 1000);
+        error => {
+            const status = error.response ? error.response.status : null;
+            const toast = useToast();
+            if (status === 400) {
+                toast.error(error.response.data.message);
+            } else if (status === 401) {
+                toast.error(error.response.data.message);
+                store.dispatch('resetAllModules')
+                    .then(response => {})
+                    .catch(error => {});
+                router.push({path: '/login'}).catch(error => {});
+            } else if (status === 404) {
+                toast.error(error.response.data.message);
+            } else if (status === 419) {
+                toast.error(error.response.data.message);
             }
-            return Promise.reject(error.response);
+
+            return Promise.reject(error);
         }
     );
 }

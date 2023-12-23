@@ -62,6 +62,9 @@ export default {
             'user': 'profile/user'
         }),
     },
+    mounted() {
+        this.$store.dispatch('profile/setUser');
+    },
 };
 </script>
 

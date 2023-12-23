@@ -1,37 +1,20 @@
 import 'bootstrap';
 import axios from 'axios';
-import { useToast } from "vue-toastification";
 window.axios = axios;
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-// window.axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+let token = document.head.querySelector('meta[name="csrf-token"]');
+if (token) {
+    window.axios.defaults.headers.common["X-CSRF-TOKEN"] = token.content;
+} else {
+    console.error(
+        "CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token"
+    );
+}
+
 window.axios.defaults.withCredentials = true;
 
-
-window.axios.interceptors.response.use(
-    response => {
-        if (response.status === 200 || response.status === 201 || response.status === 204) {
-            return Promise.resolve(response);
-        } else {
-            return Promise.reject(response);
-        }
-    },
-    error => {
-        const status = error.response ? error.response.status : null;
-        const toast = useToast();
-        if (status === 400) {
-            toast.error(error.response.data.message);
-        } else if (status === 401) {
-            toast.error(error.response.data.message);
-        } else if (status === 404) {
-            toast.error(error.response.data.message);
-        } else if (status === 419) {
-            toast.error(error.response.data.message);
-        }
-
-        return Promise.reject(error);
-    }
-);
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening

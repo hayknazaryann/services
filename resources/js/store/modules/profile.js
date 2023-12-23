@@ -14,7 +14,7 @@ export default {
     },
     getters:{
         user(state) {
-            var birthdate = state.user.birthdate;
+            const birthdate = state.user ? state.user.birthdate: null;
             state.user.birthdate = birthdate ? new Date(birthdate) : null
             return state.user
         },
@@ -31,6 +31,13 @@ export default {
         },
         SET_AUTHENTICATED(state, isAuthenticated) {
             state.isAuthenticated = isAuthenticated;
+        },
+        RESET_STATE() {
+            const s = this.initialState
+            const state = this.state
+            Object.keys(s).forEach(key => {
+                state[key] = s[key]
+            })
         },
     },
     actions:{
