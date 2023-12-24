@@ -1,94 +1,81 @@
 <template>
-    <v-card flat>
-        <v-card-title class="headline">Edit Profile</v-card-title>
-        <v-divider></v-divider>
-        <v-card-text>
-            <v-form @submit.prevent="updateProfile" ref="profileForm">
+    <v-form @submit.prevent="updateProfile" ref="profileForm">
+        <v-row class="pa-md-4">
+            <v-col cols="12" md="12">
                 <v-row>
-                    <v-col cols="12" md="7">
+                    <v-col cols="12" md="4">
+                        <v-text-field
+                            label="First Name"
+                            v-model="user.first_name"
+                            :rules="rules.first_name"
+                            :error-messages="errors && errors.first_name ? errors.first_name[0] : ''"
+                            clearable
+                            outlined
+                        ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="4">
+                        <v-text-field
+                            label="Last Name"
+                            v-model="user.last_name"
+                            :rules="rules.last_name"
+                            :error-messages="errors && errors.last_name ? errors.last_name[0] : ''"
+                            clearable
+                            outlined
+                        ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="4">
+                        <v-text-field
+                            label="Specialization"
+                            v-model="user.specialization"
+                            :error-messages="errors && errors.specialization ? errors.specialization[0] : ''"
+                            clearable
+                            outlined
+                        ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="6">
                         <v-row>
-                            <v-col cols="12">
-                                <v-text-field
-                                    label="First Name"
-                                    v-model="user.first_name"
-                                    :rules="rules.first_name"
-                                    :error-messages="errors && errors.first_name ? errors.first_name[0] : ''"
-                                    clearable
-                                    outlined
-                                ></v-text-field>
+                            <v-col cols="12" md="12">
+                                <v-phone-input
+                                    v-model="user.phone"
+                                ></v-phone-input>
                             </v-col>
-                            <v-col cols="12">
-                                <v-text-field
-                                    label="Last Name"
-                                    v-model="user.last_name"
-                                    :rules="rules.last_name"
-                                    :error-messages="errors && errors.last_name ? errors.last_name[0] : ''"
-                                    clearable
-                                    outlined
-                                ></v-text-field>
-                            </v-col>
-                            <v-col cols="12">
-                                <v-row>
-                                    <v-col cols="12" md="12">
-                                        <v-phone-input
-                                            v-model="user.phone"
-                                            :aria-errormessage="'asdads'"
-                                        ></v-phone-input>
-                                    </v-col>
 
-                                </v-row>
-                            </v-col>
-                            <v-col cols="12">
-                                <v-text-field
-                                    label="Address"
-                                    v-model="user.address"
-                                    :error-messages="errors && errors.address ? errors.address[0] : ''"
-                                    clearable
-                                    outlined
-                                ></v-text-field>
-                            </v-col>
-                            <v-col cols="12">
-                                <v-text-field
-                                    label="Specialization"
-                                    v-model="user.specialization"
-                                    :error-messages="errors && errors.specialization ? errors.specialization[0] : ''"
-                                    clearable
-                                    outlined
-                                ></v-text-field>
-                            </v-col>
-                            <v-col cols="12">
-                                <v-textarea
-                                    label="About"
-                                    v-model="user.about"
-                                    :error-messages="errors && errors.about ? errors.about[0] : ''"
-                                    outlined
-                                ></v-textarea>
-                            </v-col>
                         </v-row>
                     </v-col>
-                    <v-col cols="12" md="5">
-                        <v-date-picker
-                            title="Birth Date"
-                            v-model="user.birthdate"
-                            :error-messages="errors && errors.birthdate ? errors.birthdate[0] : ''"
-                            :format="birthDateFormat"
-                            elevation="4"
-                            show-adjacent-months
-                        ></v-date-picker>
+                    <v-col cols="12" md="6">
+                        <v-text-field
+                            label="Address"
+                            v-model="user.address"
+                            :error-messages="errors && errors.address ? errors.address[0] : ''"
+                            clearable
+                            outlined
+                        ></v-text-field>
                     </v-col>
-                </v-row>
-                <v-row>
+
                     <v-col cols="12" md="12">
+                        <v-textarea
+                            label="About"
+                            v-model="user.about"
+                            :error-messages="errors && errors.about ? errors.about[0] : ''"
+                            outlined
+                        ></v-textarea>
+                    </v-col>
+                    <v-col cols="12" md="12" class="text-center">
                         <v-btn
                             type="submit"
-                            color="primary"
+                            color="default"
+                            variant="outlined"
                             :loading="loading"
                         >Update</v-btn>
                     </v-col>
                 </v-row>
-            </v-form>
-        </v-card-text>
-    </v-card>
+            </v-col>
+        </v-row>
+        <v-row>
+
+        </v-row>
+    </v-form>
+
 </template>
 <script>
 import {mapActions} from "vuex";
@@ -100,7 +87,6 @@ export default {
         return {
             loading: false,
             errors: null,
-            birthDateFormat: 'YYYY-MM-DD',
             rules: {
                 first_name: [
                     v => !!v || 'First Name is required',

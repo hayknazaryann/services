@@ -9,7 +9,7 @@
                 cols="12"
                 md="6"
             >
-                <h1 class="text-center">Home</h1>
+
             </v-col>
         </v-row>
     </v-container>

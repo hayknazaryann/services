@@ -14,10 +14,6 @@ export default {
     },
     getters:{
         user(state) {
-            if (state.user && state.user.birthdate) {
-                const birthdate = state.user.birthdate;
-                state.user.birthdate = new Date(birthdate)
-            }
             return state.user
         },
         token: state => state.token,

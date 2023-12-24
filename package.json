@@ -20,6 +20,7 @@
         "@vitejs/plugin-vue": "^4.5.2",
         "flag-icons": "^7.1.0",
         "js-cookie": "^3.0.5",
+        "path": "^0.12.7",
         "v-phone-input": "^4.0.0",
         "vee-validate": "^4.12.3",
         "vue": "^3.2.36",

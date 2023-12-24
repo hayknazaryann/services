@@ -3,10 +3,10 @@
         <v-row justify="center" class="align-items-center">
             <v-col
                 cols="12"
-                md="6"
+                md="7"
             >
-                <v-card class="p-4 rounded-lg" :elevation="4">
-                    <v-card-title class="text-center">Register</v-card-title>
+                <v-card class="p-8 rounded-shaped elevation-8 gradient-bg">
+                    <v-card-title class="text-center text-uppercase">Register</v-card-title>
                     <v-divider></v-divider>
                     <v-card-text>
                         <v-form
@@ -61,7 +61,8 @@
                                 <v-col cols="12" md="12" class="text-center">
                                     <v-btn
                                         type="submit"
-                                        color="success"
+                                        color="default"
+                                        variant="outlined"
                                         class="mt-2"
                                         :loading="loading"
                                     >

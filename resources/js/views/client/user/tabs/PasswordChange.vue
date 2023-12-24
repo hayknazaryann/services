@@ -1,48 +1,43 @@
 <template>
-    <v-card flat>
-        <v-card-title class="headline">Change Password</v-card-title>
-        <v-divider></v-divider>
-        <v-card-text>
-            <v-form @submit.prevent="changePassword" ref="passwordForm">
-                <v-row>
-                    <v-col cols="12">
-                        <v-text-field
-                            label="Current Password"
-                            type="password"
-                            v-model="password.current"
-                            :rules="rules.password"
-                            required
-                        ></v-text-field>
-                    </v-col>
-                    <v-col cols="12">
-                        <v-text-field
-                            label="New Password"
-                            type="password"
-                            v-model="password.new"
-                            :rules="rules.new"
-                            required
-                        ></v-text-field>
-                    </v-col>
-                    <v-col cols="12">
-                        <v-text-field
-                            label="Confirm New Password"
-                            type="password"
-                            v-model="password.confirm"
-                            :rules="rules.confirm"
-                            required
-                        ></v-text-field>
-                    </v-col>
-                    <v-col cols="12">
-                        <v-btn
-                            type="submit"
-                            color="primary"
-                            :loading="loading"
-                        >Change</v-btn>
-                    </v-col>
-                </v-row>
-            </v-form>
-        </v-card-text>
-    </v-card>
+    <v-form @submit.prevent="changePassword" ref="passwordForm">
+        <v-row justify="center" class="pa-md-5">
+            <v-col cols="12" md="8">
+                <v-text-field
+                    label="Current Password"
+                    type="password"
+                    v-model="password.current"
+                    :rules="rules.password"
+                    required
+                ></v-text-field>
+            </v-col>
+            <v-col cols="12" md="8">
+                <v-text-field
+                    label="New Password"
+                    type="password"
+                    v-model="password.new"
+                    :rules="rules.new"
+                    required
+                ></v-text-field>
+            </v-col>
+            <v-col cols="12" md="8">
+                <v-text-field
+                    label="Confirm New Password"
+                    type="password"
+                    v-model="password.confirm"
+                    :rules="rules.confirm"
+                    required
+                ></v-text-field>
+            </v-col>
+            <v-col cols="12" md="8" class="text-center">
+                <v-btn
+                    type="submit"
+                    color="primary"
+                    :loading="loading"
+                >Change</v-btn>
+            </v-col>
+        </v-row>
+    </v-form>
+
 </template>
 <script>
 import {mapActions} from "vuex";
