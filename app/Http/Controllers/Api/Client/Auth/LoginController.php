@@ -4,13 +4,15 @@ namespace App\Http\Controllers\Api\Client\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Client\Auth\LoginRequest;
-use App\Http\Requests\Client\Auth\RegisterRequest;
 use App\Services\AuthService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class AuthController extends Controller
+class LoginController extends Controller
 {
+    /**
+     * @param AuthService $authService
+     */
     public function __construct(
         protected AuthService $authService
     )
@@ -24,15 +26,6 @@ class AuthController extends Controller
     public function login(LoginRequest $request): JsonResponse
     {
         return $this->authService->login($request->validated());
-    }
-
-    /**
-     * @param RegisterRequest $request
-     * @return JsonResponse
-     */
-    public function register(RegisterRequest $request): JsonResponse
-    {
-        return $this->authService->register($request->validated());
     }
 
     /**

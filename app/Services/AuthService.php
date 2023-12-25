@@ -5,9 +5,12 @@ namespace App\Services;
 use App\Http\Resources\User\UserResource;
 use App\Repositories\Interfaces\UserInterface as UserRepository;
 use App\Traits\ApiControllerTrait;
+use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
 
 class AuthService
 {
@@ -71,6 +74,56 @@ class AuthService
             return $this->successResponse([], __('Successfully logged out'), 200);
         } catch (\Exception $exception) {
             return $this->errorResponse(__('Unauthorized'), 400);
+        }
+    }
+
+    /**
+     * @param array $data
+     * @return JsonResponse
+     */
+    public function sendPasswordResetLink(array $data): JsonResponse
+    {
+        try {
+            $status = Password::broker()->sendResetLink($data);
+
+            return $status === Password::RESET_LINK_SENT
+                ? $this->successResponse(
+                    [],
+                    __("If you've provided registered e-mail, you should get recovery e-mail shortly."),
+                    200
+                )
+                : $this->errorResponse(
+                    __("Unable to send password reset link."),
+                    400
+                );
+
+        } catch (\Exception $exception) {
+            return $this->errorResponse(__('Something went wrong !'), 400);
+        }
+    }
+
+    /**
+     * @param array $data
+     * @return JsonResponse
+     */
+    public function resetPassword(array $data): JsonResponse
+    {
+        try {
+            Password::broker()
+                ->reset(
+                    $data,
+                    function ($user, string $password) {
+                        $user->forceFill([
+                            'password' => Hash::make($password),
+                        ])->setRememberToken(Str::random(60));
+                        $user->save();
+                        event(new PasswordReset($user));
+                    }
+                );
+
+            return $this->successResponse([], __('Password reset successfully'));
+        } catch (\Exception $exception) {
+            return $this->errorResponse(__('Something went wrong !'), 400);
         }
     }
 }

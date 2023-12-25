@@ -44,17 +44,16 @@ class UserService
     public function changePassword(User $user, array $data): JsonResponse
     {
         try {
-            if (!$this->userRepository->checkPassword($user, $data['current'])) {
+            if (!$this->userRepository->checkPassword($user, $data['password'])) {
                 $this->errorResponse('Password is incorrect !', 401);
             }
 
             $this->userRepository->update($user, [
-                'password' => Hash::make($data['new']),
+                'password' => Hash::make($data['new_password']),
             ]);
 
             return $this->successResponse([], 'Password changed successfully');
         } catch (\Exception $exception) {
-            dd($exception->getMessage());
             return $this->errorResponse(__('Unauthorized'), 400);
         }
 

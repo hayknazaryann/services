@@ -39,10 +39,10 @@ export default {
         },
     },
     actions:{
-        async login({commit, dispatch}, userData){
+        async login({commit, dispatch}, data){
             try {
                 await axios.get('/sanctum/csrf-cookie')
-                const response = await axios.post('/api/client/login', userData);
+                const response = await axios.post('/api/client/login', data);
                 dispatch('setUser');
                 commit('SET_TOKEN', response.data.data.token);
             } catch (e) {
@@ -50,10 +50,10 @@ export default {
             }
         },
 
-        async register({ dispatch, commit }, userData) {
+        async register({ dispatch, commit }, data) {
             try {
                 await axios.get('/sanctum/csrf-cookie')
-                const response = await axios.post('/api/client/register', userData);
+                const response = await axios.post('/api/client/register', data);
                 toast.success(response.data.message);
                 router.push({ path: '/login'});
             } catch (e) {
@@ -85,10 +85,31 @@ export default {
             }
         },
 
-        async updateProfile({ commit, dispatch }, userData) {
+        async forgotPassword({commit}, data) {
             try {
                 await axios.get('/sanctum/csrf-cookie')
-                const response = await axios.post('/api/client/profile/update', userData);
+                const response = await axios.post('/api/client/password/forgot', data);
+                toast.success(response.data.message);
+            } catch (e) {
+                throw e;
+            }
+        },
+
+        async resetPassword({commit}, data) {
+            try {
+                await axios.get('/sanctum/csrf-cookie')
+                const response = await axios.post('/api/client/password/reset', data);
+                toast.success(response.data.message);
+                router.push({ path: '/login'});
+            } catch (e) {
+                throw e;
+            }
+        },
+
+        async updateProfile({ commit, dispatch }, data) {
+            try {
+                await axios.get('/sanctum/csrf-cookie')
+                const response = await axios.post('/api/client/profile/update', data);
                 commit('SET_USER', userData);
                 toast.success(response.data.message);
             } catch (e) {

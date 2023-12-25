@@ -5,6 +5,8 @@ import Index from '../views/client/Index.vue';
 import Profile from '../views/client/user/Profile.vue';
 import Login from '../views/client/auth/Login.vue';
 import Register from '../views/client/auth/Register.vue';
+import ForgotPassword from '../views/client/auth/ForgotPassword.vue';
+import ResetPassword from '../views/client/auth/ResetPassword.vue';
 
 const routes = [
     {
@@ -36,6 +38,30 @@ const routes = [
             title: 'Register',
         },
         component: Register
+    },
+    {
+        path: '/password-forgot',
+        name: 'password.forgot',
+        component: ForgotPassword,
+        meta:{
+            middleware: 'guest',
+            accessAuth: false,
+            title: 'Forgot Password',
+        },
+    },
+    {
+        path: '/password-reset',
+        name: 'password.reset',
+        component: ResetPassword,
+        props: (route) => ({
+            token: route.query.token,
+            email: route.query.email,
+        }),
+        meta:{
+            middleware: 'guest',
+            accessAuth: false,
+            title: 'Reset Password',
+        },
     },
     {
         path: '/profile',

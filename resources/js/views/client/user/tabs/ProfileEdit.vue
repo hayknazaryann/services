@@ -63,7 +63,7 @@
                     <v-col cols="12" md="12" class="text-center">
                         <v-btn
                             type="submit"
-                            color="default"
+                            color="primary"
                             variant="outlined"
                             :loading="loading"
                         >Update</v-btn>

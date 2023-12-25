@@ -5,7 +5,7 @@
                 <v-text-field
                     label="Current Password"
                     type="password"
-                    v-model="password.current"
+                    v-model="data.password"
                     :rules="rules.password"
                     required
                 ></v-text-field>
@@ -14,8 +14,8 @@
                 <v-text-field
                     label="New Password"
                     type="password"
-                    v-model="password.new"
-                    :rules="rules.new"
+                    v-model="data.new_password"
+                    :rules="rules.new_password"
                     required
                 ></v-text-field>
             </v-col>
@@ -23,8 +23,8 @@
                 <v-text-field
                     label="Confirm New Password"
                     type="password"
-                    v-model="password.confirm"
-                    :rules="rules.confirm"
+                    v-model="data.password_confirmation"
+                    :rules="rules.password_confirmation"
                     required
                 ></v-text-field>
             </v-col>
@@ -32,6 +32,7 @@
                 <v-btn
                     type="submit"
                     color="primary"
+                    variant="outlined"
                     :loading="loading"
                 >Change</v-btn>
             </v-col>
@@ -47,23 +48,23 @@ export default {
     data() {
         return {
             loading: false,
-            password: {
-                current: '',
-                new: '',
-                confirm: '',
+            data: {
+                password: '',
+                new_password: '',
+                password_confirmation: '',
             },
             rules: {
                 password: [
                     v => !!v || 'Password is required',
                     v => (v && v.length >= 8) || 'Password must be at least 8 characters',
                 ],
-                new: [
+                new_password: [
                     v => !!v || 'New Password is required',
                     v => (v && v.length >= 8) || 'Password must be at least 8 characters',
                 ],
-                confirm: [
+                password_confirmation: [
                     v => !!v || 'Confirm Password is required',
-                    v => (this.password.new === v) || 'Password must match'
+                    v => (this.password.new_password === v) || 'Password must match'
                 ],
             }
         };
@@ -78,7 +79,7 @@ export default {
                 this.loading = true;
                 this.errors = null;
                 try {
-                    await this.appPasswordChange(this.password).then((response) => {
+                    await this.appPasswordChange(this.data).then((response) => {
                         this.loading = false;
                     });
                 } catch (e) {

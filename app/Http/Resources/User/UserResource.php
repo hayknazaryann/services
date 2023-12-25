@@ -25,7 +25,6 @@ class UserResource extends JsonResource
             'specialization' => $this->profile->specialization ?? null,
             'about' => $this->profile->about ?? null,
             'avatar' => $this->profile->avatar ?? null,
-            'birthdate' => $this->profile->birthdate ? Carbon::parse($this->profile->birthdate)->format('F j, Y') : null,
         ];
     }
 }

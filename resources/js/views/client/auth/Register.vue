@@ -69,6 +69,19 @@
                                         Register
                                     </v-btn>
                                 </v-col>
+                                <v-divider></v-divider>
+                                <v-col cols="12" md="12" class="text-center">
+                                    <v-label>
+                                        Already have an account ?
+                                        <v-btn
+                                            :to="{path: '/login'}"
+                                            variant="text"
+                                            color="primary"
+                                        >
+                                            Login
+                                        </v-btn>
+                                    </v-label>
+                                </v-col>
                             </v-row>
                         </v-form>
                     </v-card-text>

@@ -6,12 +6,14 @@
                 md="7"
             >
                 <v-card class="p-3 rounded-shaped elevation-8 gradient-bg">
-                    <v-card-title class="text-center text-uppercase">Login</v-card-title>
+                    <v-card-title class="text-center text-uppercase">
+                        Forgot Password
+                    </v-card-title>
                     <v-divider></v-divider>
                     <v-card-text>
                         <v-form
-                            @submit.prevent="login"
-                            ref="loginForm"
+                            @submit.prevent="forgotPassword"
+                            ref="forgotPasswordForm"
                             lazy-validation
                         >
                             <v-row>
@@ -23,15 +25,7 @@
                                         label="E-mail"
                                     ></v-text-field>
                                 </v-col>
-                                <v-col cols="12" md="12">
-                                    <v-text-field
-                                        v-model="user.password"
-                                        :rules="rules.password"
-                                        :error-messages="errors && errors.password ? errors.password[0] : ''"
-                                        type="password"
-                                        label="Password"
-                                    ></v-text-field>
-                                </v-col>
+
                                 <v-col cols="12" md="12" class="text-center">
                                     <v-btn
                                         type="submit"
@@ -40,32 +34,8 @@
                                         class="mt-2"
                                         :loading="loading"
                                     >
-                                        Login
+                                        Submit
                                     </v-btn>
-                                </v-col>
-                                <v-col cols="12" md="12" class="text-center">
-                                    <v-label>
-                                        <v-btn
-                                            :to="{name: 'password.forgot'}"
-                                            variant="text"
-                                            color="primary"
-                                        >
-                                            Forgot Password
-                                        </v-btn>
-                                    </v-label>
-                                </v-col>
-                                <v-divider></v-divider>
-                                <v-col cols="12" md="12" class="text-center">
-                                    <v-label>
-                                        Don't have an account ?
-                                        <v-btn
-                                            :to="{path: '/register'}"
-                                            variant="text"
-                                            color="primary"
-                                        >
-                                            Register
-                                        </v-btn>
-                                    </v-label>
                                 </v-col>
                             </v-row>
                         </v-form>
@@ -75,44 +45,37 @@
         </v-row>
     </v-container>
 </template>
-
 <script>
 import {mapActions} from "vuex";
-import router from "../../../router/index.js";
 
 export default {
-    name:'login',
+    name:'forgotPassword',
     data(){
         return {
             loading: false,
             errors: null,
             user: {
                 email:'',
-                password:'',
             },
             rules: {
                 email: [
                     v => !!v || 'Email is required',
                     v => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid',
-                ],
-                password: [
-                    v => !!v || 'Password is required',
-                    v => (v && v.length >= 8) || 'Password must be at least 8 characters',
-                ],
+                ]
             },
         }
     },
     methods:{
         ...mapActions({
-            appLogin:'profile/login'
+            appForgotPassword: 'profile/forgotPassword'
         }),
-        async login(){
-            const {valid} = await this.$refs.loginForm.validate()
+        async forgotPassword(){
+            const {valid} = await this.$refs.forgotPasswordForm.validate()
             if (valid) {
                 this.loading = true;
                 this.errors = null;
                 try {
-                    await this.appLogin(this.user).then((response) => {
+                    await this.appForgotPassword(this.user).then((response) => {
                         this.loading = false;
                     });
                 } catch (e) {
@@ -127,8 +90,6 @@ export default {
     }
 }
 </script>
-
-
 <style scoped>
 
 </style>
