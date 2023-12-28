@@ -23,8 +23,8 @@
                 <v-text-field
                     label="Confirm New Password"
                     type="password"
-                    v-model="data.password_confirmation"
-                    :rules="rules.password_confirmation"
+                    v-model="data.new_password_confirmation"
+                    :rules="rules.new_password_confirmation"
                     required
                 ></v-text-field>
             </v-col>
@@ -51,7 +51,7 @@ export default {
             data: {
                 password: '',
                 new_password: '',
-                password_confirmation: '',
+                new_password_confirmation: '',
             },
             rules: {
                 password: [
@@ -62,9 +62,9 @@ export default {
                     v => !!v || 'New Password is required',
                     v => (v && v.length >= 8) || 'Password must be at least 8 characters',
                 ],
-                password_confirmation: [
+                new_password_confirmation: [
                     v => !!v || 'Confirm Password is required',
-                    v => (this.password.new_password === v) || 'Password must match'
+                    v => (this.data.new_password === v) || 'Password must match'
                 ],
             }
         };
