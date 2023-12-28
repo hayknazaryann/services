@@ -38,12 +38,11 @@ class UserRepository extends EloquentRepository implements UserInterface
         ]);
 
         $model->profile()->update([
-            'phone_code' => $data['phone_code'],
-            'phone_number' => $data['phone_number'],
+            'phone' => $data['phone'],
             'address' => $data['address'],
             'specialization' => $data['specialization'],
             'about' => $data['about'],
-            'birthdate' => Carbon::parse($data['birthdate'])->addDay()->format('Y-m-d'),
+//            'birthdate' => Carbon::parse($data['birthdate'])->addDay()->format('Y-m-d'),
         ]);
 
         return $this;

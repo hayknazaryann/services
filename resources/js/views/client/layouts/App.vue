@@ -29,7 +29,19 @@
             <v-parallax
                 :src="isDark ? bgImageDark : bgImageWhite"
             >
-                <v-main class="d-flex align-center justify-center" style="min-height: 100vh;">
+
+                <v-main class="d-flex flex-column align-center justify-center min-100vh">
+                    <verify-notice
+                        v-if="
+                        $route.name !== 'home' &&
+                        $route.name !== 'verify.email' &&
+                        isAuthenticated &&
+                        user &&
+                        !user.verified
+                        "
+                        :id="user.id"
+                    ></verify-notice>
+
                     <router-view></router-view>
                 </v-main>
             </v-parallax>
@@ -66,9 +78,13 @@
 import {mapActions, mapGetters} from "vuex";
 import bgImageDark from '../../../../img/bg/dark.webp';
 import bgImageWhite from '../../../../img/bg/white.webp';
+import VerifyNotice from "../partials/VerifyNotice.vue";
 
 export default {
     name: "App",
+    components: {
+        VerifyNotice
+    },
     data: () => ({
         bgImageDark,
         bgImageWhite,
@@ -89,7 +105,8 @@ export default {
     computed: {
         ...mapGetters({
             'isDark': 'settings/darkMode',
-            'isAuthenticated': 'profile/isAuthenticated'
+            'isAuthenticated': 'profile/isAuthenticated',
+            'user': 'profile/user'
         }),
         darkMode: function () {
             return this.isDark;

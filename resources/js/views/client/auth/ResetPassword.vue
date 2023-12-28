@@ -51,6 +51,7 @@
 import {mapActions} from "vuex";
 
 export default {
+    name: 'ResetPassword',
     props: ['token', 'email'],
     data() {
         return {

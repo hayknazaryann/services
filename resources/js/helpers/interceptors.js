@@ -13,19 +13,12 @@ export default function setup() {
         error => {
             const status = error.response ? error.response.status : null;
             const toast = useToast();
-            if (status === 400) {
-                toast.error(error.response.data.message);
-            } else if (status === 401) {
-                toast.error(error.response.data.message);
+            toast.error(error.response.data.message);
+            if (status === 401) {
                 store.dispatch('resetAllModules')
                     .then(response => {})
                     .catch(error => {});
                 router.push({path: '/login'}).catch(error => {});
-            } else if (status === 404) {
-                toast.error(error.response.data.message);
-            } else if (status === 419) {
-                window.location.reload();
-                toast.error(error.response.data.message);
             }
 
             return Promise.reject(error);

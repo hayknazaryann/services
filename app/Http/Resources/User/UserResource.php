@@ -25,6 +25,7 @@ class UserResource extends JsonResource
             'specialization' => $this->profile->specialization ?? null,
             'about' => $this->profile->about ?? null,
             'avatar' => $this->profile->avatar ?? null,
+            'verified' => $this->hasVerifiedEmail(),
         ];
     }
 }

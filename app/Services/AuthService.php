@@ -3,12 +3,16 @@
 namespace App\Services;
 
 use App\Http\Resources\User\UserResource;
+use App\Models\User;
 use App\Repositories\Interfaces\UserInterface as UserRepository;
 use App\Traits\ApiControllerTrait;
 use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 
@@ -52,11 +56,20 @@ class AuthService
     public function register(array $data): JsonResponse
     {
         try {
+            DB::beginTransaction();
             $data['password'] = Hash::make($data['password']);
-            $this->userRepository->create($data);
-
-            return $this->successResponse([], __('Successfully registered'), 201);
+            $user = $this->userRepository->create($data);
+            event(new Registered($user));
+            DB::commit();
+            return $this->successResponse(
+                data: [],
+                message: __('Successfully registered. Please check your email for verification.'),
+                statusCode: 201
+            );
         } catch (\Exception $exception) {
+            DB::rollback();
+            dd($exception->getMessage());
+            Log::error($exception->getMessage());
             return $this->errorResponse(__('Unauthorized'), 400);
         }
     }
@@ -122,6 +135,53 @@ class AuthService
                 );
 
             return $this->successResponse([], __('Password reset successfully'));
+        } catch (\Exception $exception) {
+            return $this->errorResponse(__('Something went wrong !'), 400);
+        }
+    }
+
+    /**
+     * @param int $id
+     * @param string $hash
+     * @return JsonResponse
+     */
+    public function verifyEmail(int $id, string $hash): JsonResponse
+    {
+        try {
+            $user = $this->userRepository->findOrFail($id);
+
+            if (! hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
+                return $this->errorResponse(__('Invalid verification link !'), 401);
+            }
+
+            if ($user->hasVerifiedEmail()) {
+                return $this->successResponse([], __('Email already verified'), 200);
+            }
+
+            $user->markEmailAsVerified();
+
+            return $this->successResponse([], __('Email verified successfully'), 200);
+        } catch (\Exception $exception) {
+            return $this->errorResponse(__('Something went wrong !'), 400);
+        }
+    }
+
+    /**
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function resendVerifyEmail(int $id): JsonResponse
+    {
+        try {
+            $user = $this->userRepository->findOrFail($id);
+
+            if ($user->hasVerifiedEmail()) {
+                return $this->successResponse([], __('Email already verified'), 200);
+            }
+
+            $user->sendEmailVerificationNotification();
+            return $this->successResponse([], __('Verification email has been resent !'), 200);
+
         } catch (\Exception $exception) {
             return $this->errorResponse(__('Something went wrong !'), 400);
         }

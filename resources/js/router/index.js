@@ -7,6 +7,7 @@ import Login from '../views/client/auth/Login.vue';
 import Register from '../views/client/auth/Register.vue';
 import ForgotPassword from '../views/client/auth/ForgotPassword.vue';
 import ResetPassword from '../views/client/auth/ResetPassword.vue';
+import VerifyEmail from "../views/client/auth/VerifyEmail.vue";
 
 const routes = [
     {
@@ -61,6 +62,20 @@ const routes = [
             middleware: 'guest',
             accessAuth: false,
             title: 'Reset Password',
+        },
+    },
+    {
+        path: '/verify-email/:id/:hash',
+        name: 'verify.email',
+        component: VerifyEmail,
+        props: (route) => ({
+            id: route.params.id,
+            hash: route.params.hash,
+        }),
+        meta:{
+            middleware: 'guest',
+            accessAuth: true,
+            title: 'Verify Email',
         },
     },
     {

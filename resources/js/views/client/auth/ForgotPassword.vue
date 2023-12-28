@@ -49,7 +49,7 @@
 import {mapActions} from "vuex";
 
 export default {
-    name:'forgotPassword',
+    name:'ForgotPassword',
     data(){
         return {
             loading: false,

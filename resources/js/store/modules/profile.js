@@ -13,11 +13,10 @@ export default {
         isAuthenticated: false,
     },
     getters:{
-        user(state) {
-            return state.user
-        },
+        user: state => state.user,
         token: state => state.token,
         isAuthenticated: state => state.isAuthenticated,
+        isVerified: state => (state.user ? state.user.verified : false),
     },
     mutations:{
         SET_USER(state, user) {
@@ -61,6 +60,27 @@ export default {
             }
         },
 
+        async verifyEmail({commit}, data) {
+            try {
+                await axios.get('/sanctum/csrf-cookie')
+                const response = await axios.post(`/api/client/verify-email/${data.id}/${data.hash}`);
+                dispatch('setUser');
+                toast.success(response.data.message);
+            } catch (e) {
+                throw e;
+            }
+        },
+
+        async resendVerifyEmail({commit}, data) {
+            try {
+                await axios.get('/sanctum/csrf-cookie')
+                const response = await axios.post('/api/client/verify-resend', data);
+                toast.success(response.data.message);
+            } catch (e) {
+                throw e;
+            }
+        },
+
         async setUser({ commit }) {
             try {
                 const response = await axios.get('/api/user');
@@ -76,7 +96,7 @@ export default {
             try {
                 await axios.get('/sanctum/csrf-cookie')
                 const response = await axios.post('/api/client/logout');
-                commit('SET_USER', {})
+                commit('SET_USER', null)
                 commit('SET_AUTHENTICATED', false)
                 commit('SET_TOKEN', null)
                 router.push({ path: '/login'});
@@ -110,7 +130,7 @@ export default {
             try {
                 await axios.get('/sanctum/csrf-cookie')
                 const response = await axios.post('/api/client/profile/update', data);
-                commit('SET_USER', userData);
+                dispatch('setUser');
                 toast.success(response.data.message);
             } catch (e) {
                 throw e;

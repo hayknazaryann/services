@@ -94,7 +94,7 @@
 import {mapActions} from "vuex";
 
 export default {
-    name:'register',
+    name:'Register',
     data(){
         return {
             user:{

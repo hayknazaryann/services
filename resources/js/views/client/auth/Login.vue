@@ -81,7 +81,7 @@ import {mapActions} from "vuex";
 import router from "../../../router/index.js";
 
 export default {
-    name:'login',
+    name:'Login',
     data(){
         return {
             loading: false,

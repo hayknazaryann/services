@@ -29,7 +29,7 @@ class UserService
     public function updateProfile(User $user, array $data): JsonResponse
     {
         try {
-            $this->userRepository->update($user, $data);
+            $this->userRepository->updateProfile($user, $data);
             return $this->successResponse([], 'Successfully updated');
         } catch (\Exception $exception) {
             return $this->errorResponse(__('Unauthorized'));
