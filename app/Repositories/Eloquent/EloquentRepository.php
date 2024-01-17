@@ -3,6 +3,7 @@
 namespace App\Repositories\Eloquent;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use InvalidArgumentException;
@@ -17,9 +18,9 @@ abstract class EloquentRepository implements EloquentInterface
   /**
    * @inheritDoc
    */
-  public function paginate(): LengthAwarePaginator
+  public function paginate(int $pageSize = 15): LengthAwarePaginator
   {
-    return $this->getModel()->paginate(15);
+    return $this->getModelByOrder()->paginate($pageSize);
   }
 
   /**
@@ -99,4 +100,16 @@ abstract class EloquentRepository implements EloquentInterface
     }
     return $this->model;
   }
+
+    /**
+     * @param string $column
+     * @param string $sort
+     * @return Builder
+     */
+  protected function getModelByOrder(string $column = 'id', string $sort = 'desc'): Builder
+  {
+      return $this->getModel()->orderBy($column, $sort);
+  }
+
+
 }

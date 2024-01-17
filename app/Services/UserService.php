@@ -6,7 +6,9 @@ use App\Models\User;
 use App\Repositories\Interfaces\UserInterface;
 use App\Traits\ApiControllerTrait;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class UserService
 {
@@ -29,10 +31,19 @@ class UserService
     public function updateProfile(User $user, array $data): JsonResponse
     {
         try {
+            DB::beginTransaction();
             $this->userRepository->updateProfile($user, $data);
-            return $this->successResponse([], 'Successfully updated');
+            DB::commit();
+            return $this->successResponse(
+                data: [],
+                message: __('Successfully updated')
+            );
         } catch (\Exception $exception) {
-            return $this->errorResponse(__('Unauthorized'));
+            DB::rollBack();
+            Log::error('Profile update error: ' . $exception->getMessage());
+            return $this->errorResponse(
+                message: __('Something went wrong !')
+            );
         }
     }
 
@@ -45,7 +56,10 @@ class UserService
     {
         try {
             if (!$this->userRepository->checkPassword($user, $data['password'])) {
-                $this->errorResponse('Password is incorrect !', 401);
+                $this->errorResponse(
+                    message: __('Password is incorrect !'),
+                    statusCode: 401
+                );
             }
 
             $this->userRepository->update($user, [
@@ -54,7 +68,10 @@ class UserService
 
             return $this->successResponse([], 'Password changed successfully');
         } catch (\Exception $exception) {
-            return $this->errorResponse(__('Unauthorized'), 400);
+            Log::error('Change password error: ' . $exception->getMessage());
+            return $this->errorResponse(
+                message: __('Something went wrong !')
+            );
         }
 
     }

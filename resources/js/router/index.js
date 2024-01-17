@@ -8,6 +8,7 @@ import Register from '../views/client/auth/Register.vue';
 import ForgotPassword from '../views/client/auth/ForgotPassword.vue';
 import ResetPassword from '../views/client/auth/ResetPassword.vue';
 import VerifyEmail from "../views/client/auth/VerifyEmail.vue";
+import NotesIndex from "../views/client/notes/Index.vue"
 
 const routes = [
     {
@@ -87,6 +88,17 @@ const routes = [
             title: 'Profile',
         },
         component: Profile
+    },
+
+    {
+        path: '/notes',
+        name: 'notes.index',
+        meta:{
+            middleware: 'auth',
+            accessAuth: true,
+            title: 'Notes',
+        },
+        component: NotesIndex
     },
 
 ]

@@ -60,7 +60,7 @@ export default {
             }
         },
 
-        async verifyEmail({commit}, data) {
+        async verifyEmail({dispatch, commit}, data) {
             try {
                 await axios.get('/sanctum/csrf-cookie')
                 const response = await axios.post(`/api/client/verify-email/${data.id}/${data.hash}`);

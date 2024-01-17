@@ -66,10 +66,10 @@ interface EloquentInterface
 
     /**
      * Get paginated records
-     *
+     * @param int $pageSize
      * @return LengthAwarePaginator
      */
-    public function paginate(): LengthAwarePaginator;
+    public function paginate(int $pageSize): LengthAwarePaginator;
 
     /**
      * @param array $attributes

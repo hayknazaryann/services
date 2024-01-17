@@ -2,7 +2,7 @@
     <v-container>
         <v-row justify="center">
             <v-col cols="12" md="9">
-                <v-card class="rounded-shaped elevation-8 min-90vh gradient-bg">
+                <v-card class="rounded-shaped elevation-8 min-90vh">
                     <v-tabs
                         v-model="tab"
                         direction="horizontal"

@@ -1,21 +1,17 @@
 <template>
-    <v-layout :class="isDark ? 'theme-dark' : 'theme-light'">
-        <v-app id="inspire">
-            <v-app-bar :elevation="4" title="Application" class="gradient-bg" fixed>
+    <v-app id="inspire" :class="isDark ? 'theme-dark' : 'theme-light'">
+        <v-parallax
+            :src="isDark ? bgImageDark : bgImageWhite"
+        >
+            <v-app-bar app :elevation="4">
+                <v-toolbar-title>Application</v-toolbar-title>
                 <template v-slot:append>
-                    <v-btn :to="{ name: 'home' }" icon="mdi-home" title="Home"></v-btn>
-                    <v-btn v-if="isAuthenticated" icon="mdi-note-plus" title="Notes"></v-btn>
-                    <v-btn
-                        :to="{ name: (isAuthenticated ? 'profile' : 'login') }"
-                        :icon="isAuthenticated ? 'mdi-account' : 'mdi-login-variant'"
-                        :title="isAuthenticated ? 'Profile' : 'Login'"
+                    <v-btn v-if="!isAuthenticated"
+                           :to="{ name: 'login' }"
+                           icon="mdi-login-variant"
+                           title="Login"
                     ></v-btn>
-                    <v-btn v-if="isAuthenticated"
-                           @click="logout"
-                           icon="mdi-logout"
-                           title="Logout"
-                    ></v-btn>
-                    <v-btn v-else
+                    <v-btn v-if="!isAuthenticated"
                            :to="{ name: 'register'}"
                            icon="mdi-account-plus"
                            title="Register"
@@ -26,60 +22,46 @@
                     ></v-btn>
                 </template>
             </v-app-bar>
-            <v-parallax
-                :src="isDark ? bgImageDark : bgImageWhite"
-            >
 
-                <v-main class="d-flex flex-column align-center justify-center min-100vh">
-                    <verify-notice
-                        v-if="
+            <v-main class="d-flex flex-column align-center justify-center min-100vh">
+                <verify-notice
+                    v-if="
                         $route.name !== 'home' &&
                         $route.name !== 'verify.email' &&
                         isAuthenticated &&
                         user &&
                         !user.verified
                         "
-                        :id="user.id"
-                    ></verify-notice>
+                    :id="user.id"
+                ></verify-notice>
+                <router-view></router-view>
+            </v-main>
 
-                    <router-view></router-view>
-                </v-main>
-            </v-parallax>
+            <v-bottom-navigation :elevation="14" v-if="isAuthenticated">
+                <v-btn :to="{ name: 'profile' }">
+                    <v-icon>mdi-account</v-icon>
+                    <span>Profile</span>
+                </v-btn>
 
-            <v-footer
-                :elevation="7"
-                class="text-center d-flex flex-column gradient-bg"
-            >
-                <div>
-                    <v-btn
-                        v-for="icon in icons"
-                        :key="icon"
-                        class="mx-4"
-                        :icon="icon"
-                        variant="text"
-                    ></v-btn>
-                </div>
+                <v-btn :to="{ name: 'notes.index'}">
+                    <v-icon>mdi-note</v-icon>
+                    <span>My Notes</span>
+                </v-btn>
 
-                <div class="pt-0">
-                    <!-- Footer description-->
-                </div>
-
-                <v-divider></v-divider>
-
-                <div>
-                    {{ new Date().getFullYear() }} — <strong>Application</strong>
-                </div>
-            </v-footer>
-        </v-app>
-    </v-layout>
+                <v-btn @click="logout">
+                    <v-icon>mdi-logout</v-icon>
+                    <span>Logout</span>
+                </v-btn>
+            </v-bottom-navigation>
+        </v-parallax>
+    </v-app>
 </template>
 
 <script>
 import {mapActions, mapGetters} from "vuex";
-import bgImageDark from '../../../../img/bg/dark.webp';
-import bgImageWhite from '../../../../img/bg/white.webp';
-import VerifyNotice from "../partials/VerifyNotice.vue";
-
+import bgImageDark from '@images/bg/dark.webp';
+import bgImageWhite from '@images/bg/white.webp';
+import VerifyNotice from "@client/partials/VerifyNotice.vue";
 export default {
     name: "App",
     components: {
@@ -87,20 +69,7 @@ export default {
     },
     data: () => ({
         bgImageDark,
-        bgImageWhite,
-        links: [
-            'Home',
-            'About Us',
-            'Services',
-            'Blog',
-            'Contact Us',
-        ],
-        icons: [
-            'mdi-facebook',
-            'mdi-twitter',
-            'mdi-linkedin',
-            'mdi-instagram',
-        ],
+        bgImageWhite
     }),
     computed: {
         ...mapGetters({
@@ -142,13 +111,21 @@ export default {
 <style lang="scss">
 .theme-dark {
     .gradient-bg {
-        background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)) !important;
+        background: linear-gradient(#0000007F, #0000007F) !important;
+    }
+
+    .card-bg {
+        background: #1b1b1b !important;
     }
 }
 
 .theme-light {
     .gradient-bg {
-        background: linear-gradient(rgb(255, 255, 255), rgb(255, 255, 255)) !important;
+        background: linear-gradient(#FFFFFFFF, #FFFFFFFF) !important;
+    }
+
+    .card-bg {
+        background: #eaeaea !important;
     }
 }
 
@@ -159,5 +136,8 @@ export default {
 
 .min-90vh {
     min-height: 90vh;;
+}
+.m-auto {
+    margin: auto !important;
 }
 </style>

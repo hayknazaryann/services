@@ -43,9 +43,15 @@ class AuthService
             $responseData['user'] = new UserResource(request()->user());
             $responseData['token'] = $responseData['user']->createToken('authToken')->plainTextToken;
 
-            return $this->successResponse($responseData, __('Successfully logged in'), 200);
+            return $this->successResponse(
+                data: $responseData,
+                message: __('Successfully logged in')
+            );
         } catch (\Exception $exception) {
-            return $this->errorResponse(__('Unauthorized'), 400);
+            Log::error('Login error: ' . $exception->getMessage());
+            return $this->errorResponse(
+                message: __('Something went wrong !')
+            );
         }
     }
 
@@ -68,9 +74,10 @@ class AuthService
             );
         } catch (\Exception $exception) {
             DB::rollback();
-            dd($exception->getMessage());
-            Log::error($exception->getMessage());
-            return $this->errorResponse(__('Unauthorized'), 400);
+            Log::error('Register error: ' . $exception->getMessage());
+            return $this->errorResponse(
+                message: __('Something went wrong !')
+            );
         }
     }
 
@@ -84,9 +91,14 @@ class AuthService
             request()->session()->invalidate();
             request()->session()->regenerateToken();
 
-            return $this->successResponse([], __('Successfully logged out'), 200);
+            return $this->successResponse(
+                data: [],
+                message: __('Successfully logged out')
+            );
         } catch (\Exception $exception) {
-            return $this->errorResponse(__('Unauthorized'), 400);
+            return $this->errorResponse(
+                message: __('Something went wrong !')
+            );
         }
     }
 
@@ -101,17 +113,18 @@ class AuthService
 
             return $status === Password::RESET_LINK_SENT
                 ? $this->successResponse(
-                    [],
-                    __("If you've provided registered e-mail, you should get recovery e-mail shortly."),
-                    200
+                    data: [],
+                    message: __("If you've provided registered e-mail, you should get recovery e-mail shortly."),
                 )
                 : $this->errorResponse(
-                    __("Unable to send password reset link."),
-                    400
+                    message: __("Unable to send password reset link."),
                 );
 
         } catch (\Exception $exception) {
-            return $this->errorResponse(__('Something went wrong !'), 400);
+            Log::error('Password send reset error: ' . $exception->getMessage());
+            return $this->errorResponse(
+                message: __('Something went wrong !')
+            );
         }
     }
 
@@ -134,9 +147,15 @@ class AuthService
                     }
                 );
 
-            return $this->successResponse([], __('Password reset successfully'));
+            return $this->successResponse(
+                data: [],
+                message: __('Password reset successfully')
+            );
         } catch (\Exception $exception) {
-            return $this->errorResponse(__('Something went wrong !'), 400);
+            Log::error('Password reset error: ' . $exception->getMessage());
+            return $this->errorResponse(
+                message: __('Something went wrong !')
+            );
         }
     }
 
@@ -160,9 +179,15 @@ class AuthService
 
             $user->markEmailAsVerified();
 
-            return $this->successResponse([], __('Email verified successfully'), 200);
+            return $this->successResponse(
+                data: [],
+                message: __('Email verified successfully')
+            );
         } catch (\Exception $exception) {
-            return $this->errorResponse(__('Something went wrong !'), 400);
+            Log::error('Verify email error: ' . $exception->getMessage());
+            return $this->errorResponse(
+                message: __('Something went wrong !')
+            );
         }
     }
 
@@ -180,10 +205,15 @@ class AuthService
             }
 
             $user->sendEmailVerificationNotification();
-            return $this->successResponse([], __('Verification email has been resent !'), 200);
-
+            return $this->successResponse(
+                data: [],
+                message: __('Verification email has been resent !')
+            );
         } catch (\Exception $exception) {
-            return $this->errorResponse(__('Something went wrong !'), 400);
+            Log::error('Resend verify email error: ' . $exception->getMessage());
+            return $this->errorResponse(
+                message: __('Something went wrong !')
+            );
         }
     }
 }
