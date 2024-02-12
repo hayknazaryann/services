@@ -14,7 +14,7 @@ Please check the official laravel installation guide for server requirements bef
 ### Checkout branch
 
     git fetch 
-    git checkout laravel-vue-user-profile
+    git checkout laravel-vue-app
 
 ### Install all the dependencies using composer
 
